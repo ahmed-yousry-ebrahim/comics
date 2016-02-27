@@ -10,6 +10,8 @@ gem 'spring', :group => :development
 
 gem 'sqlite3'
 
+gem "paperclip", "~> 4.3"
+
 group :test do
   gem 'rspec-rails'
 end

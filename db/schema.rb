@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 20160227140001) do
 
   create_table "comics", force: :cascade do |t|
     t.boolean  "is_published",  default: false
-    t.integer  "stripes_count"
+    t.integer  "stripes_count", default: 0
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
   end

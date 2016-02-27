@@ -1,11 +1,11 @@
 class StripesController < ApplicationController
   before_action :set_stripe, only: [:show, :update, :destroy]
+  before_action :set_comic
 
   # GET /stripes
   # GET /stripes.json
   def index
-    @stripes = Stripe.all
-
+    @stripes = Stripe.where(:comic_id => @comic.id)
     render json: @stripes
   end
 
@@ -28,6 +28,7 @@ class StripesController < ApplicationController
     @stripe = Stripe.new
     @stripe.image = image
     @stripe.caption = params[:caption]
+    @stripe.comic = @comic
 
     if @stripe.save
       render json: @stripe, status: :created, location: @stripe
@@ -39,7 +40,6 @@ class StripesController < ApplicationController
   # PATCH/PUT /stripes/1
   # PATCH/PUT /stripes/1.json
   def update
-    @stripe = Stripe.find(params[:id])
 
     if @stripe.update(stripe_params)
       head :no_content
@@ -59,7 +59,11 @@ class StripesController < ApplicationController
   private
 
     def set_stripe
-      @stripe = Stripe.find(params[:id])
+      @stripe = Stripe.where(:id => params[:id], :comic_id => params[:comic_id]).first
+    end
+
+    def set_comic
+      @comic = Comic.find(params[:comic_id])
     end
 
     def stripe_params

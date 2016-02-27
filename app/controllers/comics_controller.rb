@@ -12,7 +12,7 @@ class ComicsController < ApplicationController
   # GET /comics/1
   # GET /comics/1.json
   def show
-    render json: @comic
+    render json: @comic, :include => :stripes
   end
 
   # POST /comics
@@ -31,9 +31,8 @@ class ComicsController < ApplicationController
   # PATCH/PUT /comics/1.json
   def update
     @comic = Comic.find(params[:id])
-
     if @comic.update(comic_params)
-      head :no_content
+      render json: @comic, status: :ok
     else
       render json: @comic.errors, status: :unprocessable_entity
     end
@@ -54,6 +53,6 @@ class ComicsController < ApplicationController
     end
 
     def comic_params
-      params[:comic]
+      params.require(:comic).permit(:is_published)
     end
 end

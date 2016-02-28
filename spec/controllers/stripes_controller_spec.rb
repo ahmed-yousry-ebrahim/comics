@@ -20,16 +20,6 @@ require 'rails_helper'
 
 RSpec.describe StripesController, type: :controller do
 
-  # This should return the minimal set of attributes required to create a valid
-  # Stripe. As you add validations to Stripe, be sure to
-  # adjust the attributes here as well.
-  let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
-  }
-
-  let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
-  }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
@@ -38,64 +28,72 @@ RSpec.describe StripesController, type: :controller do
 
   describe "GET #index" do
     it "assigns all stripes as @stripes" do
-      stripe = Stripe.create! valid_attributes
-      get :index, {}, valid_session
+      stripe = FactoryGirl.create(:stripe)
+      get :index, {:comic_id => stripe.comic.id}, valid_session
       expect(assigns(:stripes)).to eq([stripe])
     end
   end
 
   describe "GET #show" do
     it "assigns the requested stripe as @stripe" do
-      stripe = Stripe.create! valid_attributes
-      get :show, {:id => stripe.to_param}, valid_session
-      expect(assigns(:stripe)).to eq(stripe)
-    end
-  end
-
-  describe "GET #new" do
-    it "assigns a new stripe as @stripe" do
-      get :new, {}, valid_session
-      expect(assigns(:stripe)).to be_a_new(Stripe)
-    end
-  end
-
-  describe "GET #edit" do
-    it "assigns the requested stripe as @stripe" do
-      stripe = Stripe.create! valid_attributes
-      get :edit, {:id => stripe.to_param}, valid_session
+      stripe = FactoryGirl.create(:stripe)
+      get :show, {:id => stripe.to_param, :comic_id => stripe.comic.id}, valid_session
       expect(assigns(:stripe)).to eq(stripe)
     end
   end
 
   describe "POST #create" do
     context "with valid params" do
+      let(:valid_attributes){
+        image = FactoryGirl.create(:image,:ten_k_image)
+        {:caption => "", :image => image.to_json}
+      }
       it "creates a new Stripe" do
+        comic = FactoryGirl.create(:comic)
         expect {
-          post :create, {:stripe => valid_attributes}, valid_session
+          post :create, format: :json, :comic_id => comic.id, :stripe => valid_attributes
         }.to change(Stripe, :count).by(1)
       end
 
       it "assigns a newly created stripe as @stripe" do
-        post :create, {:stripe => valid_attributes}, valid_session
+        comic = FactoryGirl.create(:comic)
+        post :create, format: :json, :comic_id => comic.id, :stripe => valid_attributes
         expect(assigns(:stripe)).to be_a(Stripe)
         expect(assigns(:stripe)).to be_persisted
+        expect(response).to have_http_status(:created)
       end
 
-      it "redirects to the created stripe" do
-        post :create, {:stripe => valid_attributes}, valid_session
-        expect(response).to redirect_to(Stripe.last)
+      it "automatically assign order" do
+        stripe = FactoryGirl.create(:stripe)
+        post :create, format: :json, :comic_id => stripe.comic.id, :stripe => valid_attributes
+        expect(assigns(:stripe).order).to eq(stripe.order + 1)
       end
+
+      it "doesn't allow more than 6 stripes per comic" do
+        comic = FactoryGirl.create(:comic)
+        for i in 1..6
+          FactoryGirl.create(:stripe, :comic_id => comic.id)
+        end
+        post :create, format: :json, :comic_id => comic.id, :stripe => valid_attributes
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
     end
 
     context "with invalid params" do
+      let(:invalid_attributes){
+        {:caption => ""}
+      }
       it "assigns a newly created but unsaved stripe as @stripe" do
-        post :create, {:stripe => invalid_attributes}, valid_session
+        comic = FactoryGirl.create(:comic)
+        post :create, format: :json, :comic_id => comic.id, :stripe => invalid_attributes
         expect(assigns(:stripe)).to be_a_new(Stripe)
       end
 
-      it "re-renders the 'new' template" do
-        post :create, {:stripe => invalid_attributes}, valid_session
-        expect(response).to render_template("new")
+      it "responds with error status code" do
+        comic = FactoryGirl.create(:comic)
+        post :create, format: :json, :comic_id => comic.id, :stripe => invalid_attributes
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end
@@ -103,56 +101,84 @@ RSpec.describe StripesController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {:caption => "new caption"}
       }
 
       it "updates the requested stripe" do
-        stripe = Stripe.create! valid_attributes
-        put :update, {:id => stripe.to_param, :stripe => new_attributes}, valid_session
+        stripe = FactoryGirl.create(:stripe)
+        put :update, format: :json, :id => stripe.id, :comic_id => stripe.comic.id, :stripe => new_attributes
         stripe.reload
-        skip("Add assertions for updated state")
+        expect(stripe.caption).to eq("new caption")
       end
 
       it "assigns the requested stripe as @stripe" do
-        stripe = Stripe.create! valid_attributes
-        put :update, {:id => stripe.to_param, :stripe => valid_attributes}, valid_session
+        stripe = FactoryGirl.create(:stripe)
+        put :update, format: :json, :id => stripe.id, :comic_id => stripe.comic.id, :stripe => new_attributes
         expect(assigns(:stripe)).to eq(stripe)
       end
 
-      it "redirects to the stripe" do
-        stripe = Stripe.create! valid_attributes
-        put :update, {:id => stripe.to_param, :stripe => valid_attributes}, valid_session
-        expect(response).to redirect_to(stripe)
+      it "respond with success response code" do
+        stripe = FactoryGirl.create(:stripe)
+        put :update, format: :json, :id => stripe.id, :comic_id => stripe.comic.id, :stripe => new_attributes
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "maintain the stripes order" do
+        comic = FactoryGirl.create(:comic)
+        first_stripe = FactoryGirl.create(:stripe, :comic_id => comic.id)
+        second_stripe = FactoryGirl.create(:stripe, :comic_id => comic.id)
+        first_stripe_old_order = first_stripe.order
+        second_stripe_old_order = second_stripe.order
+        put :update, format: :json, :id => first_stripe.id, :comic_id => comic.id, :stripe => {:order => second_stripe.order}
+        first_stripe.reload
+        second_stripe.reload
+        expect(first_stripe.order).to eq(second_stripe_old_order)
+        expect(second_stripe.order).to eq(first_stripe_old_order)
       end
     end
 
     context "with invalid params" do
+      let(:invalid_new_attributes) {
+        {:caption => "new caption", :image => nil}
+      }
       it "assigns the stripe as @stripe" do
-        stripe = Stripe.create! valid_attributes
-        put :update, {:id => stripe.to_param, :stripe => invalid_attributes}, valid_session
+        stripe = FactoryGirl.create(:stripe)
+        put :update, format: :json, :id => stripe.id, :comic_id => stripe.comic.id, :stripe => invalid_new_attributes
         expect(assigns(:stripe)).to eq(stripe)
       end
 
-      it "re-renders the 'edit' template" do
-        stripe = Stripe.create! valid_attributes
-        put :update, {:id => stripe.to_param, :stripe => invalid_attributes}, valid_session
-        expect(response).to render_template("edit")
+      it "responds with error status code" do
+        stripe = FactoryGirl.create(:stripe)
+        put :update, format: :json, :id => stripe.id, :comic_id => stripe.comic.id, :stripe => invalid_new_attributes
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end
 
   describe "DELETE #destroy" do
     it "destroys the requested stripe" do
-      stripe = Stripe.create! valid_attributes
+      stripe = FactoryGirl.create(:stripe)
       expect {
-        delete :destroy, {:id => stripe.to_param}, valid_session
+        delete :destroy, :comic_id => stripe.comic.id, :id => stripe.to_param
       }.to change(Stripe, :count).by(-1)
     end
 
     it "redirects to the stripes list" do
-      stripe = Stripe.create! valid_attributes
-      delete :destroy, {:id => stripe.to_param}, valid_session
-      expect(response).to redirect_to(stripes_url)
+      stripe = FactoryGirl.create(:stripe)
+      delete :destroy, :comic_id => stripe.comic.id, :id => stripe.to_param
+      expect(response).to have_http_status(:no_content)
+    end
+
+    it "maintain the order of comic stripes after deletion" do
+      comic = FactoryGirl.create(:comic)
+      first_stripe = FactoryGirl.create(:stripe, :comic_id => comic.id)
+      second_stripe = FactoryGirl.create(:stripe, :comic_id => comic.id)
+      third_stripe = FactoryGirl.create(:stripe, :comic_id => comic.id)
+      delete :destroy, :comic_id => comic.id, :id => second_stripe.to_param
+      first_stripe.reload
+      third_stripe.reload
+      expect(first_stripe.order).to eq(1)
+      expect(third_stripe.order).to eq(2)
     end
   end
 

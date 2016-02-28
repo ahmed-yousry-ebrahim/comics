@@ -19,26 +19,19 @@ require 'rails_helper'
 # that an instance is receiving a specific message.
 
 RSpec.describe ComicsController, type: :controller do
-
-  # This should return the minimal set of attributes required to create a valid
-  # Comic. As you add validations to Comic, be sure to
-  # adjust the attributes here as well.
-  let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
-  }
-
-  let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
-  }
-
-  # This should return the minimal set of values that should be in the session
-  # in order to pass any filters (e.g. authentication) defined in
-  # ComicsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
-
+  let(:valid_comic_data) {{is_published: false}}
+  let(:invalid_comic_data) {{:non_comic_attribute => "no data"}}
   describe "GET #index" do
-    it "assigns all comics as @comics" do
-      comic = Comic.create! valid_attributes
+
+    it "does not assign unpublished comics as @comics" do
+      comic = FactoryGirl.create(:comic, :is_published => false)
+      get :index, {}, valid_session
+      expect(assigns(:comics)).to eq([])
+    end
+
+    it "assigns all published comics as @comics" do
+      comic = FactoryGirl.create(:comic, :is_published => true)
       get :index, {}, valid_session
       expect(assigns(:comics)).to eq([comic])
     end
@@ -46,23 +39,8 @@ RSpec.describe ComicsController, type: :controller do
 
   describe "GET #show" do
     it "assigns the requested comic as @comic" do
-      comic = Comic.create! valid_attributes
+      comic = FactoryGirl.create(:comic)
       get :show, {:id => comic.to_param}, valid_session
-      expect(assigns(:comic)).to eq(comic)
-    end
-  end
-
-  describe "GET #new" do
-    it "assigns a new comic as @comic" do
-      get :new, {}, valid_session
-      expect(assigns(:comic)).to be_a_new(Comic)
-    end
-  end
-
-  describe "GET #edit" do
-    it "assigns the requested comic as @comic" do
-      comic = Comic.create! valid_attributes
-      get :edit, {:id => comic.to_param}, valid_session
       expect(assigns(:comic)).to eq(comic)
     end
   end
@@ -71,31 +49,19 @@ RSpec.describe ComicsController, type: :controller do
     context "with valid params" do
       it "creates a new Comic" do
         expect {
-          post :create, {:comic => valid_attributes}, valid_session
+          post :create, format: :json, :comic => valid_comic_data
         }.to change(Comic, :count).by(1)
       end
 
       it "assigns a newly created comic as @comic" do
-        post :create, {:comic => valid_attributes}, valid_session
+        post :create, format: :json, :comic => valid_comic_data
         expect(assigns(:comic)).to be_a(Comic)
         expect(assigns(:comic)).to be_persisted
       end
 
-      it "redirects to the created comic" do
-        post :create, {:comic => valid_attributes}, valid_session
-        expect(response).to redirect_to(Comic.last)
-      end
-    end
-
-    context "with invalid params" do
-      it "assigns a newly created but unsaved comic as @comic" do
-        post :create, {:comic => invalid_attributes}, valid_session
-        expect(assigns(:comic)).to be_a_new(Comic)
-      end
-
-      it "re-renders the 'new' template" do
-        post :create, {:comic => invalid_attributes}, valid_session
-        expect(response).to render_template("new")
+      it "respond with created response code" do
+        post :create, format: :json, :comic => valid_comic_data
+        expect(response).to have_http_status(:created)
       end
     end
   end
@@ -103,56 +69,49 @@ RSpec.describe ComicsController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {:is_published => true}
       }
 
       it "updates the requested comic" do
-        comic = Comic.create! valid_attributes
-        put :update, {:id => comic.to_param, :comic => new_attributes}, valid_session
+        comic = FactoryGirl.create(:comic)
+        put :update, format: :json, :id => comic.id, :comic => new_attributes
         comic.reload
-        skip("Add assertions for updated state")
+        expect(comic.is_published).to eq(true)
       end
 
       it "assigns the requested comic as @comic" do
-        comic = Comic.create! valid_attributes
-        put :update, {:id => comic.to_param, :comic => valid_attributes}, valid_session
+        comic = FactoryGirl.create(:comic)
+        put :update, format: :json, :id => comic.id, :comic => new_attributes
         expect(assigns(:comic)).to eq(comic)
       end
 
-      it "redirects to the comic" do
-        comic = Comic.create! valid_attributes
-        put :update, {:id => comic.to_param, :comic => valid_attributes}, valid_session
-        expect(response).to redirect_to(comic)
-      end
-    end
-
-    context "with invalid params" do
-      it "assigns the comic as @comic" do
-        comic = Comic.create! valid_attributes
-        put :update, {:id => comic.to_param, :comic => invalid_attributes}, valid_session
-        expect(assigns(:comic)).to eq(comic)
-      end
-
-      it "re-renders the 'edit' template" do
-        comic = Comic.create! valid_attributes
-        put :update, {:id => comic.to_param, :comic => invalid_attributes}, valid_session
-        expect(response).to render_template("edit")
+      it "respond with success response code" do
+        comic = FactoryGirl.create(:comic)
+        put :update, format: :json, :id => comic.id, :comic => new_attributes
+        expect(response).to have_http_status(:ok)
       end
     end
   end
 
   describe "DELETE #destroy" do
     it "destroys the requested comic" do
-      comic = Comic.create! valid_attributes
+      comic = FactoryGirl.create(:comic)
       expect {
         delete :destroy, {:id => comic.to_param}, valid_session
       }.to change(Comic, :count).by(-1)
     end
 
-    it "redirects to the comics list" do
-      comic = Comic.create! valid_attributes
+    it "return the no content status" do
+      comic = FactoryGirl.create(:comic)
       delete :destroy, {:id => comic.to_param}, valid_session
-      expect(response).to redirect_to(comics_url)
+      expect(response).to have_http_status(:no_content)
+    end
+
+    it "cascade the delete to the children stripes of a deleted comic" do
+      stripe = FactoryGirl.create(:stripe)
+      expect {
+        delete :destroy, {:id => stripe.comic.to_param}, valid_session
+      }.to change(Stripe, :count).by(-1)
     end
   end
 

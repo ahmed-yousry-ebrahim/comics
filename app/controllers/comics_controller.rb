@@ -19,7 +19,6 @@ class ComicsController < ApplicationController
   # POST /comics.json
   def create
     @comic = Comic.new(comic_params)
-
     if @comic.save
       render json: @comic, status: :created, location: @comic
     else
@@ -31,6 +30,7 @@ class ComicsController < ApplicationController
   # PATCH/PUT /comics/1.json
   def update
     @comic = Comic.find(params[:id])
+
     if @comic.update(comic_params)
       render json: @comic, status: :ok
     else
@@ -53,6 +53,12 @@ class ComicsController < ApplicationController
     end
 
     def comic_params
-      params.require(:comic).permit(:is_published)
+
+      if params.is_a?(String)
+        return JSON.parse(params[:comic])
+      else
+        return params.require(:comic).permit(:is_published)
+      end
+
     end
 end

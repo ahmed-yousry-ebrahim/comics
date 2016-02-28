@@ -18,20 +18,22 @@ class StripesController < ApplicationController
   # POST /stripes
   # POST /stripes.json
   def create
-
-    image_params = params[:image]
-    encoded_image = image_params[:data]
-    content_type = image_params[:content_type]
-    image = Paperclip.io_adapters.for("data:#{content_type};base64,#{encoded_image}")
-    image.original_filename = image_params[:filename]
-
     @stripe = Stripe.new
-    @stripe.image = image
-    @stripe.caption = params[:caption]
+
+    unless stripe_params[:image].blank?
+      image_params = JSON.parse(stripe_params[:image])
+      encoded_image = image_params["data"]
+      content_type = image_params["content_type"]
+      image = Paperclip.io_adapters.for(encoded_image)
+      image.original_filename = image_params["filename"]
+      @stripe.image = image
+    end
+
+    @stripe.caption = stripe_params[:caption]
     @stripe.comic = @comic
 
     if @stripe.save
-      render json: @stripe, status: :created, location: @stripe
+      render json: @stripe, status: :created
     else
       render json: @stripe.errors, status: :unprocessable_entity
     end
@@ -40,9 +42,8 @@ class StripesController < ApplicationController
   # PATCH/PUT /stripes/1
   # PATCH/PUT /stripes/1.json
   def update
-
     if @stripe.update(stripe_params)
-      head :no_content
+      render json: @stripe, status: :ok
     else
       render json: @stripe.errors, status: :unprocessable_entity
     end
@@ -67,6 +68,11 @@ class StripesController < ApplicationController
     end
 
     def stripe_params
-      params.require(:stripe).permit(:caption, :order, :comic_d)
+      if params.is_a?(String)
+        return JSON.parse(params[:stripe])
+      else
+        return params.require(:stripe).permit(:caption, :order, :comic_id, :image)
+      end
+
     end
 end

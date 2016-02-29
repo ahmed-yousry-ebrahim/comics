@@ -1,5 +1,6 @@
 // bower:scss
 @import "foundation/scss/foundation.scss";
+@import "components-font-awesome/scss/font-awesome.scss";
 // endbower
 $light-grey: #f7f4f0;
 $text-color: #444444;
@@ -19,7 +20,8 @@ $text-color: #444444;
 
 body {
   color: $text-color;
-  padding: 81px 130px;
+  padding-top: 81px;
+  padding-left:  130px;
   background-color: $light-grey;
   @include font(300)
 }
@@ -77,10 +79,26 @@ body {
   }
 }
 
+.row{
+  margin: 0px 0px;
+}
+
+.clear-fix{
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
+@media #{$small-only} { 
+  body{
+    padding-top: 39px !important;
+    padding-left:  27px !important;
+  }
+}
+
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
   .container {
-    max-width: 730px;
+    max-width: 100%;
   }
 
   /* Remove the padding we set earlier */

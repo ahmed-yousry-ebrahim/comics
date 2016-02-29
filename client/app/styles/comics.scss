@@ -1,4 +1,4 @@
-
+@import "common.scss";
 @mixin font($weight: 300, $style: normal) {
   font-family: 'open sans';
   font-weight: $weight;
@@ -22,7 +22,7 @@
 	}
 	.file-upload {
 	  position: relative;
-	  left: 4px;
+	  left: -10px;
 	  margin: 10px;
 
 	  .file-input {
@@ -31,7 +31,7 @@
 	  right: 0;
 	  margin: 0;
 	  padding: 0;
-	  font-size: 20px;
+	  font-size: 30px;
 	  cursor: pointer;
 	  opacity: 0;
 	  filter: alpha(opacity=0);
@@ -42,7 +42,7 @@
 	.file-upload-component{
 		border: 1px solid #bbbbbb;
 	    border-radius: 3px;
-	    width: 378px;
+	    //width: 378px;
 	    height: 43px;
 	    padding-left: 16px;
 	    padding-top: 7px;
@@ -54,6 +54,7 @@
 			    color: #bbbbbb;
 			    line-height: 25px;
 			    text-align: left;
+			    white-space:nowrap;
 		}
 		.choose-file{
 			@include font(300);
@@ -69,9 +70,57 @@
 			text-align:center;
 		}
 	}
+	.mobile-upload{
+		input{
+			position: absolute;
+			top: 0;
+			right: 0;
+			margin: 0;
+			padding: 0;
+			font-size: 30px;
+			cursor: pointer;
+			opacity: 0;
+			filter: alpha(opacity=0);
+		}
+		.button{
+			width:100%;
+		}
+	}
+
+	.upload-btn{
+		background:#00d7a7;
+		border:1px solid #00d7a7;
+		border-radius:3px;
+		height:43px;
+		font-size:14px;
+		color:#ffffff;
+		line-height:14px;
+		text-align:center;
+		width: 138px;
+		margin-left: 20px;
+
+	}
 	}
 
 	
 
 
+}
+
+@media #{$small-only} { 
+  .new-comic{
+	.title{
+		font-size:36px;
+		color:#444444;
+		line-height:49px;
+	}
+	.file-upload {
+	.upload-btn{
+		margin-top: 16px;
+		margin-left: 0px;
+		height: 43px;
+		width: 100%;
+	}
+	}
+	}
 }

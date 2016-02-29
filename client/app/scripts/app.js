@@ -18,7 +18,8 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'adaptive.detection'
+    'adaptive.detection',
+    'naif.base64'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -38,4 +39,9 @@ angular
       .otherwise({
         redirectTo: '/'
       });
+  })
+  .factory('Comic', ['$resource', function($resource) {
+  return $resource('/api/comics/:id.json', null, {
+    'update': { method:'PUT' }
   });
+  }]);

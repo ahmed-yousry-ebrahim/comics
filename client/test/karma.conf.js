@@ -36,6 +36,7 @@ module.exports = function(config) {
       'bower_components/jquery-placeholder/jquery.placeholder.js',
       'bower_components/foundation/js/foundation.js',
       'bower_components/angular-adaptive-detection/src/angular-adaptive-detection.js',
+      'bower_components/angular-base64-upload/src/angular-base64-upload.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

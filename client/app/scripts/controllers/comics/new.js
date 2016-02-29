@@ -8,13 +8,34 @@
  * Controller of the comicsApp
  */
 angular.module('comicsApp')
-  .controller('ComicsNewCtrl', ['$detection',function ($detection) {
+  .controller('ComicsNewCtrl', ['$detection',"Comic",function ($detection, Comic) {
   	var ComicsNewCtrl = this;
-    ComicsNewCtrl.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
+    
     ComicsNewCtrl.userAgent = $detection.getUserAgent();
-    ComicsNewCtrl.isAndroid = $detection.isAndroid();
+    ComicsNewCtrl.isMobile = $detection.isAndroid() || $detection.isiOS();
+    ComicsNewCtrl.comicId = 0;
+    ComicsNewCtrl.uploadedImage = {
+    	"filename" : "No file selected"
+    };
+
+    ComicsNewCtrl.upload = function(){
+    	if(ComicsNewCtrl.comicId == 0){
+    		var comic = new Comic();
+    		comic.comic = {"is_published" : false};
+    		Comic.save(comic, function(response) {
+				ComicsNewCtrl.comicId = response.id;
+				console.log(ComicsNewCtrl.comicId);
+  			},
+  			function(error){
+  				console.log(error);
+  			}
+  			); 
+    	}
+    };
+
+    ComicsNewCtrl.getCameraPhoto = function (photoPromise) {
+      photoPromise.then(function (imgSrc) {
+
+      });
+    };
   }]);

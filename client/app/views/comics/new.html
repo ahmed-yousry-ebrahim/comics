@@ -6,15 +6,22 @@
 		Upload an image
 	</div>
 	<div class="row file-upload">
-	<input type="file" class="file-input">
-	<div class="row file-upload-component">
-		<div class="left file-name">
-			No file selected
-		</div>
-		<div class="right choose-file">
-			Choose file
+	<div ng-hide="ComicsNewCtrl.isMobile" class="small-11 medium-7 large-5 columns">
+		<input type="file" class="file-input" ng-model="ComicsNewCtrl.uploadedImage" base-sixty-four-input>
+		<div class="row file-upload-component">
+			<div class="left small-7 columns file-name">
+				{{ComicsNewCtrl.uploadedImage.filename}}
+			</div>
+			<div class="right choose-file">
+				Choose File
+			</div>
 		</div>
 	</div>
-	{{ComicsNewCtrl.isAndroid}}
+	<div class="small-11 medium-2 columns clear-fix">
+		<a class="button upload-btn" ng-click="ComicsNewCtrl.upload()">Upload</a>
+	</div>
+	<div ng-show="ComicsNewCtrl.isMobile" class="left small-11 columns mobile-upload">
+		<camera on-select="ComicsNewCtrl.getCameraPhoto(photo)"></camera>
+	</div>
 	</div>
 </div>

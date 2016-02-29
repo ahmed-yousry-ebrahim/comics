@@ -123,6 +123,21 @@ RSpec.describe StripesController, type: :controller do
         expect(response).to have_http_status(:ok)
       end
 
+      it "raises an error when order is 0" do
+        comic = FactoryGirl.create(:comic)
+        stripe = FactoryGirl.create(:stripe, :comic_id => comic.id)
+        put :update, format: :json, :id => stripe.id, :comic_id => comic.id, :stripe => {:order => 0}
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it "raises an error when order is bigger than the number of stripes" do
+        comic = FactoryGirl.create(:comic)
+        stripe = FactoryGirl.create(:stripe, :comic_id => comic.id)
+        comic.reload
+        put :update, format: :json, :id => stripe.id, :comic_id => comic.id, :stripe => {:order => comic.stripes_count + 1}
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
       it "maintain the stripes order" do
         comic = FactoryGirl.create(:comic)
         first_stripe = FactoryGirl.create(:stripe, :comic_id => comic.id)

@@ -1,7 +1,8 @@
 class Stripe < ActiveRecord::Base
   before_create :add_order_attribute
   after_destroy :maintain_comic_stripes_order
-  after_update :swap_stripes_order , :if => "order_changed?"
+  before_update :check_order , :if => "order_changed?"
+  after_update :swap_stripes , :if => "order_changed?"
   belongs_to :comic, counter_cache: true
   validates_associated :comic
   has_attached_file :image, styles: { thumb: "220x170#" }
@@ -23,7 +24,7 @@ class Stripe < ActiveRecord::Base
       end
     end
 
-    def swap_stripes_order
+    def swap_stripes
       query = self.comic.stripes.where(:order => self.order)
       query.each do |stripe|
         unless stripe.id == self.id
@@ -33,5 +34,12 @@ class Stripe < ActiveRecord::Base
 
       end
 
+    end
+
+    def check_order
+      if self.order < 1 || self.order > self.comic.stripes_count
+        errors.add(:order,'Order cannot be less than 1 or exceed the stripes count')
+        return false
+      end
     end
 end

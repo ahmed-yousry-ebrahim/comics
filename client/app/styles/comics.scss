@@ -1,0 +1,77 @@
+
+@mixin font($weight: 300, $style: normal) {
+  font-family: 'open sans';
+  font-weight: $weight;
+  font-style: $style;
+}
+.new-comic{
+	.title{
+		font-size:64px;
+		color:#444444;
+		line-height:87px;
+		text-align:left;
+	}
+	.upload-title{
+		font-size:14px;
+		color:#3d4049;
+		letter-spacing:0.3px;
+		line-height:16px;
+		text-align:left;
+		margin-top: 63px;
+		@include font(700)
+	}
+	.file-upload {
+	  position: relative;
+	  left: 4px;
+	  margin: 10px;
+
+	  .file-input {
+	  position: absolute;
+	  top: 0;
+	  right: 0;
+	  margin: 0;
+	  padding: 0;
+	  font-size: 20px;
+	  cursor: pointer;
+	  opacity: 0;
+	  filter: alpha(opacity=0);
+
+
+	}
+
+	.file-upload-component{
+		border: 1px solid #bbbbbb;
+	    border-radius: 3px;
+	    width: 378px;
+	    height: 43px;
+	    padding-left: 16px;
+	    padding-top: 7px;
+	    vertical-align: middle;
+	    padding-right: 7px;
+
+		.file-name{
+			    font-size: 14px;
+			    color: #bbbbbb;
+			    line-height: 25px;
+			    text-align: left;
+		}
+		.choose-file{
+			@include font(300);
+			background:#f7f7f7;
+			border:1px solid #bbbbbb;
+			border-radius:3px;
+			width:132px;
+			height:29px;
+			font-size:14px;
+			color:#888888;
+			letter-spacing:0.3px;
+			line-height:25px;
+			text-align:center;
+		}
+	}
+	}
+
+	
+
+
+}

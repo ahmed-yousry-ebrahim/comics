@@ -1,6 +1,14 @@
 // bower:scss
 @import "foundation/scss/foundation.scss";
 // endbower
+$light-grey: #f7f4f0;
+$text-color: #444444;
+
+@mixin font($weight: 300, $style: normal) {
+  font-family: 'open sans';
+  font-weight: $weight;
+  font-style: $style;
+}
 
 .browsehappy {
   margin: 0.2em 0;
@@ -10,7 +18,10 @@
 }
 
 body {
-  padding: 0;
+  color: $text-color;
+  padding: 81px 130px;
+  background-color: $light-grey;
+  @include font(300)
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */

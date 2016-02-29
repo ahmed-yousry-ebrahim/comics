@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name comicsAppApp.controller:AboutCtrl
+ * @name comicsApp.controller:ComicsIndexCtrl
  * @description
- * # AboutCtrl
- * Controller of the comicsAppApp
+ * # ComicsIndexCtrl
+ * Controller of the comicsApp
  */
 angular.module('comicsApp')
-  .controller('AboutCtrl', function () {
+  .controller('ComicsIndexCtrl', function () {
     this.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',

@@ -17,19 +17,23 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch'
+    'ngTouch',
+    'adaptive.detection'
   ])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl',
-        controllerAs: 'main'
+        redirectTo: '/comics/new'
       })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl',
-        controllerAs: 'about'
+      .when('/comics/new', {
+        templateUrl: 'views/comics/new.html',
+        controller: 'ComicsNewCtrl',
+        controllerAs: 'ComicsNewCtrl'
+      })
+      .when('/comics/index', {
+        templateUrl: 'views/comics/index.html',
+        controller: 'ComicsIndexCtrl',
+        controllerAs: 'ComicsIndexCtrl'
       })
       .otherwise({
         redirectTo: '/'

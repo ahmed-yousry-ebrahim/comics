@@ -19,7 +19,8 @@ angular
     'ngSanitize',
     'ngTouch',
     'adaptive.detection',
-    'naif.base64'
+    'naif.base64',
+    'angular-loading-bar'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -42,6 +43,11 @@ angular
   })
   .factory('Comic', ['$resource', function($resource) {
   return $resource('/api/comics/:id.json', null, {
+    'update': { method:'PUT' }
+  });
+  }])
+  .factory('Stripe', ['$resource', function($resource) {
+  return $resource('/api/comics/:comicId/stripes/:id.json', {comicId:'@comicId'}, {
     'update': { method:'PUT' }
   });
   }]);

@@ -46,7 +46,7 @@ RSpec.describe StripesController, type: :controller do
     context "with valid params" do
       let(:valid_attributes){
         image = FactoryGirl.create(:image,:ten_k_image)
-        {:caption => "", :image => image.to_json}
+        {:caption => "", :image => image}
       }
       it "creates a new Stripe" do
         comic = FactoryGirl.create(:comic)
@@ -154,7 +154,7 @@ RSpec.describe StripesController, type: :controller do
 
     context "with invalid params" do
       let(:invalid_new_attributes) {
-        {:caption => "new caption", :image => nil}
+        {:caption => "new caption", :image => {}}
       }
       it "assigns the stripe as @stripe" do
         stripe = FactoryGirl.create(:stripe)

@@ -88,6 +88,17 @@ body {
   padding-left: 0px;
 }
 
+.hidden{
+  display:none;
+}
+
+.alert-box{
+ width: 85%;
+ p{
+  margin-bottom: 5px;
+ } 
+}
+
 @media #{$small-only} { 
   body{
     padding-top: 39px !important;

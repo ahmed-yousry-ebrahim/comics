@@ -1,3 +1,6 @@
+<div ng-show="ComicsNewCtrl.hasErrors" class="row alert-box alert radius">
+  <p ng-repeat="error in ComicsNewCtrl.errors">{{error}}</p>
+</div>
 <div class="new-comic">
 	<div class="row title">
 		Comic Creator
@@ -6,10 +9,10 @@
 		Upload an image
 	</div>
 	<div class="row file-upload">
-	<div ng-hide="ComicsNewCtrl.isMobile" class="small-11 medium-7 large-5 columns">
-		<input type="file" class="file-input" ng-model="ComicsNewCtrl.uploadedImage" base-sixty-four-input>
+	<div class="small-11 medium-7 large-5 columns">
+		<input type="file" capture="camera" accept="image/*" class="file-input" ng-model="ComicsNewCtrl.uploadedImage" base-sixty-four-input>
 		<div class="row file-upload-component">
-			<div class="left small-7 columns file-name">
+			<div class="left small-6 medium-7 large-7 columns file-name">
 				{{ComicsNewCtrl.uploadedImage.filename}}
 			</div>
 			<div class="right choose-file">
@@ -17,11 +20,10 @@
 			</div>
 		</div>
 	</div>
-	<div class="small-11 medium-2 columns clear-fix">
+	<div class="small-11 left medium-2 columns clear-fix">
 		<a class="button upload-btn" ng-click="ComicsNewCtrl.upload()">Upload</a>
 	</div>
-	<div ng-show="ComicsNewCtrl.isMobile" class="left small-11 columns mobile-upload">
-		<camera on-select="ComicsNewCtrl.getCameraPhoto(photo)"></camera>
+	
 	</div>
-	</div>
+	
 </div>

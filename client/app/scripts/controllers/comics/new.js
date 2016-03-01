@@ -14,28 +14,32 @@ angular.module('comicsApp')
     ComicsNewCtrl.userAgent = $detection.getUserAgent();
     ComicsNewCtrl.isMobile = $detection.isAndroid() || $detection.isiOS();
     ComicsNewCtrl.comicId = 0;
+    ComicsNewCtrl.hasErrors = false;
+    ComicsNewCtrl.errors = [];
     ComicsNewCtrl.uploadedImage = {
     	"filename" : "No file selected"
     };
 
     ComicsNewCtrl.upload = function(){
+      if(ComicsNewCtrl.uploadedImage.file != null){
     	if(ComicsNewCtrl.comicId == 0){
     		var comic = new Comic();
     		comic.comic = {"is_published" : false};
     		Comic.save(comic, function(response) {
-				ComicsNewCtrl.comicId = response.id;
-				console.log(ComicsNewCtrl.comicId);
+				  ComicsNewCtrl.comicId = response.id;
   			},
   			function(error){
   				console.log(error);
   			}
   			); 
-    	}
-    };
+    	}else{
 
-    ComicsNewCtrl.getCameraPhoto = function (photoPromise) {
-      photoPromise.then(function (imgSrc) {
-
-      });
+      }
+    }else{
+      ComicsNewCtrl.hasErrors = true;
+      ComicsNewCtrl.errors = [];
+      ComicsNewCtrl.errors.push("You must select a file");
+    }
     };
+    
   }]);

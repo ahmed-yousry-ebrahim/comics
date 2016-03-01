@@ -32,7 +32,9 @@ angular.module('comicsApp')
           };
       stripe.$save({comicId: ComicsNewCtrl.comicId}, function(response) {
           console.log(response);
-          
+          ComicsNewCtrl.uploadedImage = {
+            "filename" : "No file selected"
+          };
         },
         function(error){
           console.log(error);
@@ -40,18 +42,18 @@ angular.module('comicsApp')
     };
 
     ComicsNewCtrl.upload = function(){
-      if(ComicsNewCtrl.uploadedImage.base64 != null){
-    	if(ComicsNewCtrl.comicId == 0){
-    		var comic = new Comic();
-    		comic.comic = {"is_published" : false};
-    		Comic.save(comic, function(response) {
-				  ComicsNewCtrl.comicId = response.id;
-          ComicsNewCtrl.createStripe();
-  			},
-  			function(error){
-  				console.log(error);
-  			}
-  			); 
+      if(ComicsNewCtrl.uploadedImage.base64 != null){        
+      	if(ComicsNewCtrl.comicId == 0){
+      		var comic = new Comic();
+      		comic.comic = {"is_published" : false};
+      		Comic.save(comic, function(response) {
+  				  ComicsNewCtrl.comicId = response.id;
+            ComicsNewCtrl.createStripe();
+    			},
+    			function(error){
+    				console.log(error);
+    			}
+    			); 
     	}else{
         ComicsNewCtrl.createStripe();
       }

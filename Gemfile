@@ -12,6 +12,8 @@ gem 'sqlite3'
 
 gem "paperclip", "~> 4.3"
 
+gem 'unicorn'
+
 group :test do
   gem "factory_girl_rails", "~> 4.0"
   gem 'rspec-rails'

@@ -36,3 +36,4 @@ bower.json
 /.idea
 /client/bower_components
 /client/node_modules
+/public

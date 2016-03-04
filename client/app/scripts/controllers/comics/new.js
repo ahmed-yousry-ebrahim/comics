@@ -81,7 +81,7 @@ angular.module('comicsApp')
         "caption": stripe.caption
       };
       updatedStripe.$update({comicId: ComicsNewCtrl.comicId, id: stripe.id}, function(response) {
-          console.log(response);
+          
         },
         function(errorResponse){
           ComicsNewCtrl.hasErrors = true;
@@ -97,7 +97,18 @@ angular.module('comicsApp')
         "order": newOrder
       };
       updatedStripe.$update({comicId: ComicsNewCtrl.comicId, id: stripeId}, function(response) {
-          console.log(response);
+          ComicsNewCtrl.updateComicData();
+        },
+        function(errorResponse){
+          ComicsNewCtrl.hasErrors = true;
+          ComicsNewCtrl.errors = [];
+          ComicsNewCtrl.errors = errorResponse.data.errors;
+        });
+      };
+
+      ComicsNewCtrl.deleteStripe = function(stripe){
+       
+      Stripe.delete({comicId: ComicsNewCtrl.comicId, id: stripe.id}, function(response) {
           ComicsNewCtrl.updateComicData();
         },
         function(errorResponse){

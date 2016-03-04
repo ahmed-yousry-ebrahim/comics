@@ -30,10 +30,13 @@
 <div class="comic-stripes">
 	<div class="row">
 		<div ng-repeat="stripe in ComicsNewCtrl.stripes | orderBy:'order'" class="small-11 medium-3 large-3 columns left">
+
 			<div class="show-for-medium-up row image">
+				<span ng-click="ComicsNewCtrl.deleteStripe(stripe)" class="delete">x</span>
 				<img src="{{stripe.web_image_url.replace(':9000',':3000')}}" />
 			</div>
 			<div class="show-for-small-only row image">
+				<span ng-click="ComicsNewCtrl.deleteStripe(stripe)" class="delete">x</span>
 				<img src="{{stripe.mobile_image_url.replace(':9000',':3000')}}" />
 			</div>
 			<div id="caption-{{stripe.id}}" ng-model="stripe.caption" contenteditable="true" placeholder="Write Caption" ng-blur="ComicsNewCtrl.updateCaption(stripe)" class="row caption">

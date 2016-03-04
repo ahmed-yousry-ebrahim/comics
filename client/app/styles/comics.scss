@@ -103,6 +103,18 @@
 }
 
 .comic-stripes{
+	.delete{
+	    position: absolute;
+	    font-size: 35px;
+	    right: 40px;
+	    top: -10px;
+	    font-weight: bold;
+	    color: #ee2970;
+	    cursor: pointer;
+	    &:hover{
+	    	color:red;
+	    }
+	}
 	.image{
 		background:#ffffff;
 		
@@ -169,6 +181,9 @@
 	}
 
 	.comic-stripes {
+		.delete{
+   			right: 30px;
+		}
 		.image{
 			margin-right: 0px;
 		}

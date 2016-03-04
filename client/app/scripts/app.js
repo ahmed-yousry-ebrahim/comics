@@ -21,9 +21,10 @@ angular
     'adaptive.detection',
     'naif.base64',
     'angular-loading-bar',
-    'contenteditable'
+    'contenteditable',
+    'updateMeta'
   ])
-  .config(function ($routeProvider) {
+  .config(['$locationProvider', '$routeProvider',function ($locationProvider,$routeProvider) {
     $routeProvider
       .when('/', {
         redirectTo: '/comics/new'
@@ -46,7 +47,8 @@ angular
       .otherwise({
         redirectTo: '/'
       });
-  })
+      $locationProvider.hashPrefix('!');
+  }])
   .factory('Comic', ['$resource', function($resource) {
   return $resource('/api/comics/:id.json', null, {
     'update': { method:'PUT' }

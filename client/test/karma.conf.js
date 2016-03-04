@@ -41,6 +41,7 @@ module.exports = function(config) {
       'bower_components/angular-loading-bar/build/loading-bar.js',
       'bower_components/json3/lib/json3.min.js',
       'bower_components/angular-simple-contenteditable/dist/contenteditable.js',
+      'bower_components/angular-update-meta/dist/update-meta.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

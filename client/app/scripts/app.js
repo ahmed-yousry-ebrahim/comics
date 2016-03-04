@@ -38,6 +38,11 @@ angular
         controller: 'ComicsIndexCtrl',
         controllerAs: 'ComicsIndexCtrl'
       })
+      .when('/comics/show/:comicId', {
+        templateUrl: 'views/comics/show.html',
+        controller: 'ComicsShowCtrl',
+        controllerAs: 'ComicsShowCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

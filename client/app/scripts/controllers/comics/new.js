@@ -8,7 +8,7 @@
  * Controller of the comicsApp
  */
 angular.module('comicsApp')
-  .controller('ComicsNewCtrl', ['$detection',"Comic", "Stripe",function ($detection, Comic, Stripe) {
+  .controller('ComicsNewCtrl', ['$detection',"Comic", "Stripe","$location",function ($detection, Comic, Stripe, $location) {
   	var ComicsNewCtrl = this;
     
     ComicsNewCtrl.userAgent = $detection.getUserAgent();
@@ -121,6 +121,22 @@ angular.module('comicsApp')
       ComicsNewCtrl.updateComicData = function(){
         var comic = Comic.get({ id: ComicsNewCtrl.comicId }, function(response) {
           ComicsNewCtrl.stripes = response.stripes;
+        },
+        function(errorResponse){
+          ComicsNewCtrl.hasErrors = true;
+          ComicsNewCtrl.errors = [];
+          ComicsNewCtrl.errors = errorResponse.data.errors;
+        });
+      };
+
+      ComicsNewCtrl.publish = function(){
+        var updatedComic = new Comic();
+        updatedComic.comic={
+          "id": ComicsNewCtrl.comicId,
+          "is_published": true
+        };
+        updatedComic.$update({id: ComicsNewCtrl.comicId}, function(response) {
+          $location.path("comics/show/" + ComicsNewCtrl.comicId);
         },
         function(errorResponse){
           ComicsNewCtrl.hasErrors = true;

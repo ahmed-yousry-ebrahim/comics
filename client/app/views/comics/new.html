@@ -33,11 +33,11 @@
 
 			<div class="show-for-medium-up row image">
 				<span ng-click="ComicsNewCtrl.deleteStripe(stripe)" class="delete">x</span>
-				<img src="{{stripe.web_image_url.replace(':9000',':3000')}}" />
+				<img ng-src="{{stripe.web_image_url.replace(':9000',':3000')}}" />
 			</div>
 			<div class="show-for-small-only row image">
 				<span ng-click="ComicsNewCtrl.deleteStripe(stripe)" class="delete">x</span>
-				<img src="{{stripe.mobile_image_url.replace(':9000',':3000')}}" />
+				<img ng-src="{{stripe.mobile_image_url.replace(':9000',':3000')}}" />
 			</div>
 			<div id="caption-{{stripe.id}}" ng-model="stripe.caption" contenteditable="true" placeholder="Write Caption" ng-blur="ComicsNewCtrl.updateCaption(stripe)" class="row caption">
 			</div>
@@ -61,5 +61,10 @@
 				
 			</div>
 		</div>
+	</div>
+</div>
+<div class="row" ng-show="ComicsNewCtrl.stripes.length > 0">
+	<div class="clear-fix">
+		<a class="button publish-btn" ng-click="ComicsNewCtrl.publish()">PUBLISH COMIC</a>
 	</div>
 </div>

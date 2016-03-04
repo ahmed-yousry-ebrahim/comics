@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc overview
- * @name comicsAppApp
+ * @name comicsApp
  * @description
- * # comicsAppApp
+ * # comicsApp
  *
  * Main module of the application.
  */

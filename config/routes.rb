@@ -5,6 +5,4 @@ Rails.application.routes.draw do
       resources :stripes, except: [:new, :edit]
     end
   end
-
-
 end

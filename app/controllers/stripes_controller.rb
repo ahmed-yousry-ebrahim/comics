@@ -6,13 +6,12 @@ class StripesController < ApplicationController
   # GET /stripes.json
   def index
     @stripes = Stripe.where(:comic_id => @comic.id)
-    render json: @stripes
   end
 
   # GET /stripes/1
   # GET /stripes/1.json
   def show
-    render json: @stripe
+    render partial: 'stripe', locals: { stripe: @stripe }
   end
 
   # POST /stripes
@@ -22,7 +21,7 @@ class StripesController < ApplicationController
     @stripe.comic = @comic
     set_image
     if @stripe.save(stripe_params.except(:image))
-      render json: @stripe, status: :created
+      render json: (render_to_string(partial: 'stripe', locals: { stripe: @stripe })), status: :created
     else
       render json: @stripe.errors, status: :unprocessable_entity
     end
@@ -33,7 +32,7 @@ class StripesController < ApplicationController
   def update
     set_image
     if @stripe.update(stripe_params.except(:image))
-      render json: @stripe, status: :ok
+      render json: (render_to_string(partial: 'stripe', locals: { stripe: @stripe })), status: :ok
     else
       render json: @stripe.errors, status: :unprocessable_entity
     end

@@ -19,6 +19,10 @@ require 'rails_helper'
 # that an instance is receiving a specific message.
 
 RSpec.describe ComicsController, type: :controller do
+  before(:each) do
+    request.accept = "application/json"
+  end
+
   let(:valid_session) { {} }
   let(:valid_comic_data) {{is_published: false}}
   let(:invalid_comic_data) {{:non_comic_attribute => "no data"}}

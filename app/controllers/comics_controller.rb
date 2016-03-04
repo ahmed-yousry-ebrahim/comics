@@ -5,14 +5,12 @@ class ComicsController < ApplicationController
   # GET /comics.json
   def index
     @comics = Comic.published
-
-    render json: @comics
   end
 
   # GET /comics/1
   # GET /comics/1.json
   def show
-    render json: @comic, :include => :stripes
+    render partial: 'comic', locals: { comic: @comic }
   end
 
   # POST /comics
@@ -20,7 +18,7 @@ class ComicsController < ApplicationController
   def create
     @comic = Comic.new(comic_params)
     if @comic.save
-      render json: @comic, status: :created, location: @comic
+      render json: (render_to_string(partial: 'comic', locals: { comic: @comic })), status: :created
     else
       render json: @comic.errors, status: :unprocessable_entity
     end
@@ -32,7 +30,7 @@ class ComicsController < ApplicationController
     @comic = Comic.find(params[:id])
 
     if @comic.update(comic_params)
-      render json: @comic, status: :ok
+      render json: (render_to_string(partial: 'comic', locals: { comic: @comic })), status: :ok
     else
       render json: @comic.errors, status: :unprocessable_entity
     end

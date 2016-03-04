@@ -1,0 +1,1 @@
+json.array! @stripes, partial: 'stripe', as: :stripe

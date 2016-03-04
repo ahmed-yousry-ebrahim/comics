@@ -1,0 +1,1 @@
+json.array! @comics, partial: 'comic', as: :comic

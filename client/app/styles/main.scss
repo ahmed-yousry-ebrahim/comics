@@ -99,6 +99,11 @@ body {
  } 
 }
 
+.caption:empty:before{
+  content: attr(data-ph) !important;
+  display: block; /* For Firefox */
+}
+
 @media #{$small-only} { 
   body{
     padding-top: 39px !important;

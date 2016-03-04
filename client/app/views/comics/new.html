@@ -1,6 +1,5 @@
 <div ng-show="ComicsNewCtrl.hasErrors" class="row alert-box alert radius">
   <p ng-repeat="error in ComicsNewCtrl.errors">{{error}}</p>
-  <a id="close-error" href="#close-error" class="close">&times;</a>
 </div>
 <div class="new-comic">
 	<div class="row title">
@@ -27,4 +26,37 @@
 	
 	</div>
 	
+</div>
+<div class="comic-stripes">
+	<div class="row">
+		<div ng-repeat="stripe in ComicsNewCtrl.stripes | orderBy:'order'" class="small-11 medium-3 large-3 columns left">
+			<div class="show-for-medium-up row image">
+				<img src="{{stripe.web_image_url.replace(':9000',':3000')}}" />
+			</div>
+			<div class="show-for-small-only row image">
+				<img src="{{stripe.mobile_image_url.replace(':9000',':3000')}}" />
+			</div>
+			<div id="caption-{{stripe.id}}" ng-model="stripe.caption" contenteditable="true" placeholder="Write Caption" ng-blur="ComicsNewCtrl.updateCaption(stripe)" class="row caption">
+			</div>
+			
+			<div class="row order-actions">
+				<span ng-show=" stripe.order == 1" class="left-arrow">
+					<img src="images/disabled-left-arrow.png" />
+				</span>
+
+				<span ng-click="ComicsNewCtrl.updateOrder(stripe.id,stripe.order-1)" ng-hide=" stripe.order == 1" class="left-arrow">
+					<img src="images/left-arrow.png" />
+				</span>
+
+				<span ng-show="$index == ComicsNewCtrl.stripes.length -1">
+					<img src="images/disabled-right-arrow.png" />
+				</span>
+
+				<span ng-click="ComicsNewCtrl.updateOrder(stripe.id,stripe.order+1)" ng-hide=" $index == ComicsNewCtrl.stripes.length -1">
+					<img src="images/right-arrow.png" />
+				</span>
+				
+			</div>
+		</div>
+	</div>
 </div>

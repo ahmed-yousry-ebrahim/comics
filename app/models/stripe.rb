@@ -5,7 +5,7 @@ class Stripe < ActiveRecord::Base
   after_update :swap_stripes , :if => "order_changed?"
   belongs_to :comic, counter_cache: true
   validates_associated :comic
-  has_attached_file :image, styles: { thumb: "220x170#" }
+  has_attached_file :image, styles: { web: "220x170#", mobile: "265x205#" }
   validates_attachment :image, presence: true,
                        content_type: { content_type: ["image/jpg","image/jpeg","image/png"] },
                        size: { in: 0..5000.kilobytes }

@@ -19,8 +19,10 @@ angular.module('comicsApp')
     ComicsNewCtrl.uploadedImage = {
     	"filename" : "No file selected"
     };
+    ComicsNewCtrl.stripes = [];
 
     ComicsNewCtrl.createStripe = function(){
+      ComicsNewCtrl.hasErrors = false;
       var stripe = new Stripe();
           stripe.stripe = {
             "caption": "",
@@ -30,18 +32,24 @@ angular.module('comicsApp')
               "filename": ComicsNewCtrl.uploadedImage.filename
             }
           };
-      stripe.$save({comicId: ComicsNewCtrl.comicId}, function(response) {
-          console.log(response);
+        stripe.$save({comicId: ComicsNewCtrl.comicId}, function(response) {
+          ComicsNewCtrl.stripes.push(response)
           ComicsNewCtrl.uploadedImage = {
             "filename" : "No file selected"
           };
         },
-        function(error){
-          console.log(error);
+        function(errorResponse){
+          ComicsNewCtrl.uploadedImage = {
+            "filename" : "No file selected"
+          };
+          ComicsNewCtrl.hasErrors = true;
+          ComicsNewCtrl.errors = [];
+          ComicsNewCtrl.errors = errorResponse.data.errors;
         });
     };
 
     ComicsNewCtrl.upload = function(){
+      ComicsNewCtrl.hasErrors = false;
       if(ComicsNewCtrl.uploadedImage.base64 != null){        
       	if(ComicsNewCtrl.comicId == 0){
       		var comic = new Comic();
@@ -50,8 +58,10 @@ angular.module('comicsApp')
   				  ComicsNewCtrl.comicId = response.id;
             ComicsNewCtrl.createStripe();
     			},
-    			function(error){
-    				console.log(error);
+    			function(errorResponse){
+    				ComicsNewCtrl.hasErrors = true;
+            ComicsNewCtrl.errors = [];
+            ComicsNewCtrl.errors = errorResponse.data.errors;
     			}
     			); 
     	}else{
@@ -63,5 +73,49 @@ angular.module('comicsApp')
       ComicsNewCtrl.errors.push("You must select a file");
     }
     };
+
+    ComicsNewCtrl.updateCaption = function(stripe){
+      var updatedStripe = new Stripe();
+      updatedStripe.stripe={
+        "id": stripe.id,
+        "caption": stripe.caption
+      };
+      updatedStripe.$update({comicId: ComicsNewCtrl.comicId, id: stripe.id}, function(response) {
+          console.log(response);
+        },
+        function(errorResponse){
+          ComicsNewCtrl.hasErrors = true;
+          ComicsNewCtrl.errors = [];
+          ComicsNewCtrl.errors = errorResponse.data.errors;
+        });
+      };
+
+    ComicsNewCtrl.updateOrder = function(stripeId, newOrder){
+      var updatedStripe = new Stripe();
+      updatedStripe.stripe={
+        "id": stripeId,
+        "order": newOrder
+      };
+      updatedStripe.$update({comicId: ComicsNewCtrl.comicId, id: stripeId}, function(response) {
+          console.log(response);
+          ComicsNewCtrl.updateComicData();
+        },
+        function(errorResponse){
+          ComicsNewCtrl.hasErrors = true;
+          ComicsNewCtrl.errors = [];
+          ComicsNewCtrl.errors = errorResponse.data.errors;
+        });
+      };
+
+      ComicsNewCtrl.updateComicData = function(){
+        var comic = Comic.get({ id: ComicsNewCtrl.comicId }, function(response) {
+          ComicsNewCtrl.stripes = response.stripes;
+        },
+        function(errorResponse){
+          ComicsNewCtrl.hasErrors = true;
+          ComicsNewCtrl.errors = [];
+          ComicsNewCtrl.errors = errorResponse.data.errors;
+        });
+      };
     
   }]);

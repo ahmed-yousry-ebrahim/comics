@@ -20,7 +20,8 @@ angular
     'ngTouch',
     'adaptive.detection',
     'naif.base64',
-    'angular-loading-bar'
+    'angular-loading-bar',
+    'contenteditable'
   ])
   .config(function ($routeProvider) {
     $routeProvider

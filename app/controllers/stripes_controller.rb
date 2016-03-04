@@ -23,7 +23,7 @@ class StripesController < ApplicationController
     if @stripe.save(stripe_params.except(:image))
       render json: (render_to_string(partial: 'stripe', locals: { stripe: @stripe })), status: :created
     else
-      render json: @stripe.errors, status: :unprocessable_entity
+      render json: {:errors => @stripe.errors.full_messages}, status: :unprocessable_entity
     end
   end
 
@@ -34,7 +34,7 @@ class StripesController < ApplicationController
     if @stripe.update(stripe_params.except(:image))
       render json: (render_to_string(partial: 'stripe', locals: { stripe: @stripe })), status: :ok
     else
-      render json: @stripe.errors, status: :unprocessable_entity
+      render json: {:errors => @stripe.errors.full_messages}, status: :unprocessable_entity
     end
   end
 

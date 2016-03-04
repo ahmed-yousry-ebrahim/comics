@@ -1,9 +1,4 @@
 @import "common.scss";
-@mixin font($weight: 300, $style: normal) {
-  font-family: 'open sans';
-  font-weight: $weight;
-  font-style: $style;
-}
 .new-comic{
 	.title{
 		font-size:64px;
@@ -107,6 +102,49 @@
 
 }
 
+.comic-stripes{
+	.image{
+		background:#ffffff;
+		
+		margin-right: 20px;
+		margin-bottom: 13px;
+	}
+
+	.caption{
+		@include font(400, italic);
+		font-size:14px;
+		color:#4a4a4a;
+		letter-spacing:0.3px;
+		line-height:16px;
+		text-align:left;
+		width: 221px;
+		&:hover{
+  			background: #E6E6E6;
+		}
+
+		&:focus, &:focus:hover  {
+		  background: #FFF;
+		  border-color: #69c773;
+		  box-shadow: 0 1px 5px rgba(0,0,0,0.15) inset;
+		}
+		
+		&.ng-empty{
+			color:#9b9b9b;
+		}
+	}
+
+	.order-actions{
+		text-align: center;
+		margin-bottom: 33px;
+		.left-arrow{
+			margin-right:33px;
+		}
+		img{
+			cursor: pointer;
+		}
+	}
+}
+
 @media #{$small-only} { 
   .new-comic{
 	.title{
@@ -115,6 +153,12 @@
 		line-height:49px;
 	}
 	.file-upload {
+		.file-upload-component{
+			.choose-file{
+				width:102px;
+				height: 31px;
+			}
+		}
 	.upload-btn{
 		margin-top: 16px;
 		margin-left: 0px;
@@ -122,5 +166,11 @@
 		width: 100%;
 	}
 	}
+	}
+
+	.comic-stripes {
+		.image{
+			margin-right: 0px;
+		}
 	}
 }

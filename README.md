@@ -13,7 +13,7 @@ Just checkout the respository to your local machine
 
 **Running using docker**
 This app is docker friendly.
-- From the root application folder run `sudo docker build -t comics_image .
+- From the root application folder run `docker build -t comics_image .
 ` to create the docker image
 - Then run `docker run -d -p 3000:80 -e SECRET_KEY_BASE=secretkey comics_image` to create the docker container
 - navigate on the host machine to `localhost:3000` and the application will be served

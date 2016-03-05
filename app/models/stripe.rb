@@ -38,7 +38,7 @@ class Stripe < ActiveRecord::Base
 
     def check_order
       if self.order < 1 || self.order > self.comic.stripes_count
-        errors.add(:order,'Order cannot be less than 1 or exceed the stripes count')
+        errors.add(:order,I18n.t("stripe.errors.order"))
         return false
       end
     end

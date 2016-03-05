@@ -76,6 +76,7 @@ GEM
       cocaine (~> 0.5.5)
       mime-types
       mimemagic (= 0.3.0)
+    pg (0.18.1)
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -156,6 +157,7 @@ DEPENDENCIES
   hashie
   jbuilder
   paperclip (~> 4.3)
+  pg
   rails (= 4.2.4)
   rails-api
   rails_12factor

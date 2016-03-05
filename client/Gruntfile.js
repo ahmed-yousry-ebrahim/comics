@@ -526,4 +526,5 @@ module.exports = function (grunt) {
     'build'
   ]);
   grunt.loadNpmTasks('grunt-connect-proxy');
+  grunt.registerTask('heroku:production', 'build');
 };

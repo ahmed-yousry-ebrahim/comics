@@ -1,7 +1,7 @@
 {
   "name": "comicsapp",
   "private": true,
-  "devDependencies": {
+  "dependencies": {
     "autoprefixer-core": "^5.2.1",
     "grunt": "^0.4.5",
     "grunt-angular-templates": "^0.5.7",

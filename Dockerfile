@@ -2,13 +2,18 @@
 FROM seapy/rails-nginx-unicorn-pro:v1.0-ruby2.2.0-nginx1.6.0
 MAINTAINER seapy(iamseapy@gmail.com)
 
-# Add here your preinstall lib(e.g. imagemagick, mysql lib, pg lib, ssh config)
-RUN apt-get update && apt-get -qq -y install libmagickwand-dev imagemagick 
-RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
-RUN apt-get update
-RUN apt-get -y install python-software-properties git build-essential
+# paperclip dependencies
+RUN apt-get update && apt-get -qq -y install libmagickwand-dev imagemagick python-software-properties git build-essential
+
 RUN add-apt-repository -y ppa:chris-lea/node.js
-RUN apt-get update
+
+# Install the latest postgresql lib for pg gem
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive \
+    apt-get install -y --force-yes libpq-dev
+
+# client dependencies
 RUN apt-get -y install nodejs
 RUN gem install compass
 RUN npm install -g grunt-cli

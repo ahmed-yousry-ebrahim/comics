@@ -35,4 +35,3 @@ config/secrets.yml
 /.idea
 /client/bower_components
 /client/node_modules
-/public

@@ -1,2 +1,1 @@
-web: bundle exec unicorn -c config/unicorn.rb
-nginx: /usr/sbin/nginx -c /etc/nginx/nginx.conf
+web: bundle exec rails server -p $PORT

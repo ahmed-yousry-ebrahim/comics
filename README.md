@@ -19,3 +19,19 @@ This app is docker friendly.
 - navigate on the host machine to `localhost:3000` and the application will be served
 
 
+**The Problem**
+
+Implement a Ruby on Rails application for the creation of comic strips
+
+- One comic strip is made out of 1 to 6 images. Each image can also contain text.
+- User uploads these images to the service. he can enter text and re-order the images in the service. 
+- Once ready, the user publishes the comic strip and it can be shared by a dedicated url.
+
+The editing should be implemented as a Single Page Application using a REST backend on the Ruby side. You are free to use whatever frontend technologies you wish.
+
+
+bonus points for:
+- Angular used in the frontend
+- Possibility to use camera to take the images on mobile
+- Good metadata (sharing, assistive technologies) on the comic page
+- Dockerfile for running the service locally
